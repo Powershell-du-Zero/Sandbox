@@ -34,4 +34,16 @@ Class SandboxConfig
         $this.MappedFolder = [System.Collections.Generic.List[SandboxMappedFolder]]::new()
     }
     #endregion
+
+    #region Config
+    [System.Object] GetConfig()
+    {
+        return [PSCustomObject]@{
+            Networking   = $this.Networking
+            VGpu         = $this.VGpu
+            LogonCommand = $this.LogonCommand
+            MappedFolder = $this.MappedFolder
+        }
+    }
+    #endregion
 }
