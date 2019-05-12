@@ -46,4 +46,9 @@ Class SandboxConfig
         }
     }
     #endregion
+
+    #region Networking
+    [SandboxStatus] GetNetworking() { return $this.Networking }
+    [System.Void] SetNetworking([SandboxStatus]$Networking) { $this.Networking = $Networking }
+    #endregion
 }
