@@ -1,4 +1,4 @@
-Class MappedFolder
+Class SandboxMappedFolder
 {
 
     [System.IO.DirectoryInfo]$HostFolder
