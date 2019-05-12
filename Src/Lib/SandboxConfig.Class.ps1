@@ -120,4 +120,99 @@ Class SandboxConfig
         $this.MappedFolder = [System.Collections.Generic.List[SandboxMappedFolder]]::new()
     }
     #endregion
+
+    #region LogonCommand
+    [System.Collections.Generic.List[SandboxLogonCommand]] GetLogonCommand() { return $this.LogonCommand }
+
+    [SandboxLogonCommand] GetLogonCommandByIndex([System.Int16]$Index)
+    {
+        return $this.LogonCommand.Where( { $_.Index -eq $Index })[0]
+    }
+
+    [SandboxLogonCommand] GetLogonCommandByCommand([System.String]$Command)
+    {
+        return $this.LogonCommand.Where( { $_.Command -eq $Command })[0]
+    }
+
+    [SandboxLogonCommand[]] GetLogonCommandByType([SandboxCommandType]$Type)
+    {
+        return $this.LogonCommand.Where( { $_.Type -eq [SandboxCommandType]$Type })
+    }
+
+    [System.Void] ClearLogonCommand()
+    {
+        $this.LogonCommand = [System.Collections.Generic.List[SandboxLogonCommand]]::new()
+    }
+
+    hidden [System.Int16] GetLogonCommandNextIndex()
+    {
+        if ($this.LogonCommand.count -gt 0)
+        {
+            # TODO : Convert the line below to .net ( .sort() )
+            $nextIndex = ($this.LogonCommand.Index | Sort-Object -Descending)[0] + 1
+            return $nextIndex
+        }
+        else
+        {
+            return 1
+        }
+    }
+
+    [System.Void] AddLogonCommand(
+        [System.String]$Command,
+        [SandboxCommandType]$Type
+    )
+    {
+        [System.UInt16]$index = $this.GetLogonCommandNextIndex()
+        $this.AddLogonCommand($index, $Command, $Type, '')
+    }
+
+    [System.Void] AddLogonCommand(
+        [System.String]$Command,
+        [SandboxCommandType]$Type,
+        [System.String]$Description
+    )
+    {
+        [System.UInt16]$index = $this.GetLogonCommandNextIndex()
+        $this.AddLogonCommand($index, $Command, $Type, $Description)
+    }
+
+    [System.Void] AddLogoncommand(
+        [system.UInt16]$Index,
+        [System.String]$Command,
+        [SandboxCommandType]$Type,
+        [System.String]$Description
+    )
+    {
+        if ( $this.GetLogonCommandByIndex($Index).count -eq 0 )
+        {
+            if ( $this.GetLogonCommandByCommand($Command).count -eq 0 )
+            {
+                $logonCommandItem = [SandboxLogonCommand]::new($Index, $Command, $Type, $Description)
+                $this.LogonCommand.add($logonCommandItem)
+            }
+            else
+            {
+                Throw "Could not add command '${Command}' because is already exist in configuration."
+            }
+        }
+        else
+        {
+            Throw "Could not add command because this index '${Index}' is already exist in configuration."
+        }
+    }
+
+    [System.Void] RemoveLogonCommand([System.UInt16]$Index)
+    {
+        $commandItem = $this.GetLogonCommandByIndex($Index)
+        if ($commandItem)
+        {
+            $this.LogonCommand.Remove($commandItem)
+        }
+        else
+        {
+            Throw "Could not remove command because this index '${Index}' does not exist."
+        }
+    }
+    #endregion
 }
