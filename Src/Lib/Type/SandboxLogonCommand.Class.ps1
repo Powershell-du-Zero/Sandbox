@@ -6,7 +6,7 @@ Class SandboxLogonCommand
     [SandboxCommandType] $Type
     [System.String] $Description
 
-    LogonCommand(
+    SandboxLogonCommand(
         [System.UInt16]$Index,
         [System.String]$Command,
         [SandboxCommandType]$Type,

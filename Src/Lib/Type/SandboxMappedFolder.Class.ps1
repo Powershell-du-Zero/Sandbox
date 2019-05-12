@@ -6,7 +6,7 @@ Class SandboxMappedFolder
     [System.Boolean]$ReadOnly
     hidden [System.String]$RemoteBasePath = 'C:\Users\WDAGUtilityAccount\Desktop'
 
-    MappedFolder(
+    SandboxMappedFolder(
         [System.String]$HostFolder,
         [System.Boolean]$ReadOnly
     )
