@@ -51,4 +51,9 @@ Class SandboxConfig
     [SandboxStatus] GetNetworking() { return $this.Networking }
     [System.Void] SetNetworking([SandboxStatus]$Networking) { $this.Networking = $Networking }
     #endregion
+
+    #region VGpu
+    [SandboxStatus] GetVGpu() { return $this.VGpu }
+    [System.Void] SetVGpu([SandboxStatus]$VGpu) { $this.VGpu = $VGpu }
+    #endregion
 }
