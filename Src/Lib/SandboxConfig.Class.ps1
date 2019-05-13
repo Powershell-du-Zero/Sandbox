@@ -215,4 +215,74 @@ Class SandboxConfig
         }
     }
     #endregion
+
+    #region
+    [System.Void] ExportToWsb([System.String]$Path)
+    {
+        # Xml Settings
+        [System.Xml.XmlWriterSettings] $xmlWriterSettings = [System.Xml.XmlWriterSettings]::new()
+        $xmlWriterSettings.Encoding = [System.Text.Encoding]::UTF8
+        $xmlWriterSettings.OmitXmlDeclaration = $true
+        $xmlWriterSettings.Indent = $true
+        $xmlWriterSettings.IndentChars = '    '
+
+        # Get an XMLTextWriter to create the XML
+        [System.Xml.XmlWriter] $XmlWriter = [System.Xml.XmlWriter]::Create($Path, $xmlWriterSettings)
+
+        # Create root element "Configuration"
+        $xmlWriter.WriteStartDocument()
+        $xmlWriter.WriteStartElement("Configuration")
+
+        # Networking
+        $xmlWriter.WriteStartElement("Networking")
+        $xmlWriter.WriteRaw($this.Networking.ToString())
+        $xmlWriter.WriteEndElement()
+
+        # VGpu
+        $xmlWriter.WriteStartElement("VGpu")
+        $xmlWriter.WriteRaw($this.VGpu.ToString())
+        $xmlWriter.WriteEndElement()
+
+        # MappedFolder
+        if ($this.MappedFolder.Count -gt 0)
+        {
+            $xmlWriter.WriteStartElement("MappedFolders");
+            foreach ($mappedFolderItem in $this.MappedFolder)
+            {
+                $xmlWriter.WriteStartElement("MappedFolder")
+                $xmlWriter.WriteStartElement("HostFolder")
+                $xmlWriter.WriteRaw($mappedFolderItem.HostFolder.FullName)
+                $xmlWriter.WriteEndElement()
+                $xmlWriter.WriteStartElement("ReadOnly")
+                $xmlWriter.WriteRaw($mappedFolderItem.ReadOnly.ToString().ToLower())
+                $xmlWriter.WriteEndElement()
+                $xmlWriter.WriteEndElement()
+            }
+            $xmlWriter.WriteEndElement()
+        }
+
+        # LogonCommand
+        # TODO : Convert Sort-Object to .net class
+        if ($this.LogonCommand.Count -gt 0)
+        {
+            $xmlWriter.WriteStartElement("LogonCommand")
+            foreach ($logonCommandItem in ($this.LogonCommand | Sort-Object -Property Index) )
+            {
+                $xmlWriter.WriteStartElement("Command")
+                $xmlWriter.WriteRaw($logonCommandItem.Command)
+                $xmlWriter.WriteEndElement()
+            }
+            $xmlWriter.WriteEndElement()
+        }
+
+        #Close the "Configuration" node:
+        $xmlWriter.WriteEndElement()
+
+        # Finalize the document:
+        $xmlWriter.WriteEndDocument()
+        $xmlWriter.Flush()
+        $xmlWriter.Close()
+        $xmlWriter.Dispose()
+    }
+    #endregion
 }
