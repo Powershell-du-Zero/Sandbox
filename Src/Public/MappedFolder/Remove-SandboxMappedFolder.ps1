@@ -19,7 +19,7 @@ function Remove-SandboxMappedFolder
         Write-Verbose "[${functionName}] Function started with Parameters: $( $PSBoundParameters | Out-String )"
 
         # Get Sandbox Class instance
-        $configuration = $Script:Sandbox.Configuration
+        $config = $Script:Sandbox.Config
     }
 
     process
@@ -28,7 +28,7 @@ function Remove-SandboxMappedFolder
         {
             try
             {
-                $configuration.RemoveMappedFolder($Path)
+                $config.RemoveMappedFolder($Path)
             }
             catch
             {

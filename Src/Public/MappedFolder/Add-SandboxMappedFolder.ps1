@@ -36,7 +36,7 @@ function Add-SandboxMappedFolder
         Write-Verbose "[${functionName}] Function started with Parameters: $( $PSBoundParameters | Out-String )"
 
         # Get Sandbox Class instance
-        $configuration = $Script:Sandbox.Configuration
+        $config = $Script:Sandbox.Config
     }
 
     process
@@ -47,7 +47,7 @@ function Add-SandboxMappedFolder
             try
             {
                 # Add a new mapped folder in the configuration
-                $configuration.AddMappedFolder($Path, $ReadOnly)
+                $config.AddMappedFolder($Path, $ReadOnly)
             }
             catch
             {

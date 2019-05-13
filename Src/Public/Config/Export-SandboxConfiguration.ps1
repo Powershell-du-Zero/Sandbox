@@ -19,14 +19,14 @@ function Export-SandboxConfiguration
         Write-Verbose "[${functionName}] Function started with Parameters: $( $PSBoundParameters | Out-String )"
 
         # Get Sandbox Class instance
-        $configuration = $Script:Sandbox.Configuration
+        $config = $Script:Sandbox.Config
     }
 
     process
     {
         try
         {
-            $configuration.ExportToWsb($Path)
+            $config.ExportToWsb($Path)
         }
         catch
         {

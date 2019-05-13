@@ -20,15 +20,15 @@ function Get-SandboxMappedFolder
         Write-Verbose "[${functionName}] Function started with Parameters: $( $PSBoundParameters | Out-String )"
 
         # Get Sandbox Class instance
-        $configuration = $Script:Sandbox.Configuration
+        $config = $Script:Sandbox.Config
     }
 
     process
     {
         switch ($PSCmdlet.ParameterSetName)
         {
-            Path { return $configuration.GetMappedFolder($Path) }
-            Default { return $configuration.GetMappedFolder() }
+            Path { return $config.GetMappedFolder($Path) }
+            Default { return $config.GetMappedFolder() }
         }
     }
 
