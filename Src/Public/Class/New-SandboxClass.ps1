@@ -1,4 +1,4 @@
-function Remove-SandboxMappedFolder
+function New-SandboxClass
 {
     [CmdletBinding()]
     Param(
@@ -8,8 +8,9 @@ function Remove-SandboxMappedFolder
             ValueFromPipeline = $true,
             ValueFromPipelineByPropertyName = $true
         )]
+        [ValidateSet('Config', 'Service')]
         [System.String]
-        $Path
+        $Name
     )
 
     begin
@@ -17,32 +18,18 @@ function Remove-SandboxMappedFolder
         # Show detailed information of this function
         $functionName = $MyInvocation.MyCommand.Name
         Write-Verbose "[${functionName}] Function started with Parameters: $( $PSBoundParameters | Out-String )"
-
-        # Get the configuration instance of the Sandbox class
-        $config = Get-SandboxClass -Name 'Config' -Cache
     }
 
     process
     {
-        if (Get-SandboxMappedFolder -Path $Path)
-        {
-            try
-            {
-                $config.RemoveMappedFolder($Path)
-            }
-            catch
-            {
-                Write-Error $_.Exception.Message
-            }
-        }
-        else
-        {
-            Write-Error "Cannot find folder '${Path}' because it does not exist in configuration."
-        }
+        return New-Object -TypeName "Sandbox${Name}"
     }
 
     end
     {
         Write-Verbose "[${functionName}] Complete"
     }
+
+
+
 }

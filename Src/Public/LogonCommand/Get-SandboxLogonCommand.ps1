@@ -37,8 +37,8 @@ function Get-SandboxLogonCommand
         $functionName = $MyInvocation.MyCommand.Name
         Write-Verbose "[${functionName}] Function started with Parameters: $( $PSBoundParameters | Out-String )"
 
-        # Get Sandbox Class instance
-        $config = $Script:Sandbox.Config
+        # Get the configuration instance of the Sandbox class
+        $config = Get-SandboxClass -Name 'Config' -Cache
     }
 
     process
