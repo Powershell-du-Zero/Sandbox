@@ -1,4 +1,4 @@
-function Export-SandboxConfiguration
+function Export-SandboxConfig
 {
     [CmdletBinding()]
     Param(
