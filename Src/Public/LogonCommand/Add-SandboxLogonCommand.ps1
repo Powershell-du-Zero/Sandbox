@@ -27,7 +27,7 @@ function Add-SandboxLogonCommand
             ValueFromPipelineByPropertyName = $true
         )]
         [SandboxCommandType]
-        $type = 'PowershellScript',
+        $type = 'PsScript',
 
         [Parameter(
             Position = 3,

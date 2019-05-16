@@ -1,5 +1,9 @@
 Enum SandboxCommandType
 {
-    PowershellScript = 1
-    CmdScript = 2
+    PsScript = 1
+    PsCommand = 2
+    PsCoreScript = 3
+    PsCoreCommand = 4
+    CmdScript = 5
+    CmdCommand = 6
 }
