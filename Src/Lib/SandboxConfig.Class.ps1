@@ -12,6 +12,9 @@ Class SandboxConfig
 
     # List of shared folders of the host
     hidden [System.Collections.Generic.List[SandboxMappedFolder]]$MappedFolder
+
+    # Work directory list
+    hidden [System.Collections.Generic.Dictionary[String, String]]$WorkDirectory
     #endregion
 
     #region Constructors
@@ -21,6 +24,7 @@ Class SandboxConfig
         $this.VGpu = [SandboxStatus]::Disable
         $this.LogonCommand = [System.Collections.Generic.List[SandboxLogonCommand]]::new()
         $this.MappedFolder = [System.Collections.Generic.List[SandboxMappedFolder]]::new()
+        $this.InitializeWorkDirectory()
     }
 
     SandboxConfig(
@@ -32,6 +36,38 @@ Class SandboxConfig
         $this.VGpu = [SandboxStatus]::Disable
         $this.LogonCommand = [System.Collections.Generic.List[SandboxLogonCommand]]::new()
         $this.MappedFolder = [System.Collections.Generic.List[SandboxMappedFolder]]::new()
+        $this.InitializeWorkDirectory()
+    }
+    #endregion
+
+    #region WorkDirectory
+    hidden [System.Void] InitializeWorkDirectory()
+    {
+        # Add the configuration of the working directories
+        $this.WorkDirectory = [System.Collections.Generic.Dictionary[String, String]]::new()
+        $this.WorkDirectory.Add('Base', [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), 'Sandbox'))
+        $this.WorkDirectory.Add('Tmp', [System.IO.Path]::Combine($this.WorkDirectory.Base, 'Tmp'))
+        $this.WorkDirectory.Add('Cache', [System.IO.Path]::Combine($this.WorkDirectory.Base, 'Cache'))
+        $this.WorkDirectory.Add('Bootstrap', [System.IO.Path]::Combine($this.WorkDirectory.Base, 'Bootstrap'))
+
+        # Create work directories if they do not exist
+        foreach ($Directory in $this.WorkDirectory.GetEnumerator())
+        {
+            if ([System.IO.Directory]::Exists($Directory.Value) -eq $false)
+            {
+                [System.IO.Directory]::CreateDirectory($Directory.Value)
+            }
+        }
+    }
+
+    hidden [System.IO.DirectoryInfo]GetWorkDirectory([System.string]$Name)
+    {
+        return $this.WorkDirectory.($Name)
+    }
+    hidden [System.Void]ResetWorkDirectory()
+    {
+        [System.IO.Directory]::Delete($this.WorkDirectory.Base, $true)
+        $this.InitializeWorkDirecotry()
     }
     #endregion
 
@@ -216,7 +252,7 @@ Class SandboxConfig
     }
     #endregion
 
-    #region
+    #region Export
     [System.Void] ExportToWsb([System.String]$Path)
     {
         # Xml Settings
